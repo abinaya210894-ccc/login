@@ -1,11 +1,21 @@
-import {test , expect} from '@playwright/test';
-test ('Login', async({page}) =>{
-await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-await page.getByPlaceholder('username').fill('Admin');
-await page.waitForTimeout(2000);
-await page.getByPlaceholder('Password').fill('admin123'); 
-await page.waitForTimeout(2000);
-await page.getByRole('button', { name: 'Login' }).click();
-await page.waitForTimeout(10000);
+import { test, expect } from '@playwright/test';
 
+test('@smoke Login with valid credentials', async ({ page }) => {
+  await page.goto('https://example.com/login');
+
+  await page.fill('#username', 'testuser');
+  await page.fill('#password', 'password123');
+  await page.click('#login');
+
+  await expect(page).toHaveURL(/dashboard/);
+});
+
+test('@regression Login with invalid credentials', async ({ page }) => {
+  await page.goto('https://example.com/login');
+
+  await page.fill('#username', 'wronguser');
+  await page.fill('#password', 'wrongpass');
+  await page.click('#login');
+
+  await expect(page.locator('.error')).toBeVisible();
 });
